@@ -6,6 +6,7 @@ coverage
 typechain
 flattened
 slither
+build
 /.DS_Store
 .idea
 contracts/hardhat-dependency-compiler/*

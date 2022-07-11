@@ -75,6 +75,7 @@
     "hardhat": "2.3.0",
     "hardhat-contract-sizer": "2.0.3",
     "hardhat-dependency-compiler": "1.1.1",
+    "hardhat-deploy": "^0.11.11",
     "hardhat-gas-reporter": "1.0.4",
     "husky": "6.0.0",
     "json-stable-stringify": "1.0.1",
@@ -102,5 +103,9 @@
       "prettier --write",
       "solhint"
     ]
+  },
+  "dependencies": {
+    "@perp/curie-deployments": "^2022.7.11-1657527059898",
+    "dotenv": "^16.0.1"
   }
 }

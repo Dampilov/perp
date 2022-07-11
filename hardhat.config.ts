@@ -2,8 +2,10 @@ import "@nomiclabs/hardhat-ethers"
 import "@nomiclabs/hardhat-waffle"
 import "@openzeppelin/hardhat-upgrades"
 import "@typechain/hardhat"
+import "dotenv/config"
 import "hardhat-contract-sizer"
 import "hardhat-dependency-compiler"
+import "hardhat-deploy"
 import "hardhat-gas-reporter"
 import { HardhatUserConfig } from "hardhat/config"
 import "solidity-coverage"
@@ -23,9 +25,51 @@ const config: HardhatUserConfig = {
             },
         },
     },
+    paths: {
+        tests: "./test",
+        artifacts: "./build/artifacts",
+        cache: "./build/cache",
+        deployments: "./build/deployments",
+    },
+    namedAccounts: {
+        deployer: 0,
+    },
     networks: {
         hardhat: {
             allowUnlimitedContractSize: true,
+        },
+        localhost: {
+            url: "http://127.0.0.1:8545",
+        },
+        rinkeby: {
+            url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY_RINKEBY}`,
+            accounts: [`0x${process.env.PRIVATE_KEY}`],
+            verify: {
+                etherscan: {
+                    apiKey: process.env.ETHERSCAN_API_KEY || "API_KEY_WEB",
+                },
+            },
+        },
+        ropsten: {
+            url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
+
+            accounts: {
+                mnemonic: process.env.MNEMONIC,
+            },
+            verify: {
+                etherscan: {
+                    apiKey: process.env.ETHERSCAN_API_KEY || "API_KEY_WEB",
+                },
+            },
+        },
+        kovan: {
+            url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
+            accounts: [`0x${process.env.PRIVATE_KEY}`],
+            verify: {
+                etherscan: {
+                    apiKey: process.env.ETHERSCAN_API_KEY || "API_KEY_WEB",
+                },
+            },
         },
     },
     dependencyCompiler: {
