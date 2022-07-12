@@ -6,10 +6,9 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts()
 
-    const Name = "BaseToken"
-    const Symbol = "BTT"
-    //kovan chainlink
-    const priceFeedAddress = "0x6135b13325bfC4B00278B4abC5e20bbce2D6580e"
+    const Name = "vETH"
+    const Symbol = "vETH"
+    const chainlinkPriceFeed = "0x8A753747A1Fa494EC906cE90E9f37563A8AF630e"
 
     await deploy("BaseToken", {
         from: deployer,
@@ -18,7 +17,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [Name, Symbol, priceFeedAddress],
+                    args: [Name, Symbol, chainlinkPriceFeed],
                 },
             },
         },

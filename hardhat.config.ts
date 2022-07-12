@@ -31,6 +31,9 @@ const config: HardhatUserConfig = {
         cache: "./build/cache",
         deployments: "./build/deployments",
     },
+    typechain: {
+        outDir: "./build/typechain",
+    },
     namedAccounts: {
         deployer: 0,
     },
@@ -42,7 +45,7 @@ const config: HardhatUserConfig = {
             url: "http://127.0.0.1:8545",
         },
         rinkeby: {
-            url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY_RINKEBY}`,
+            url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
             accounts: [`0x${process.env.PRIVATE_KEY}`],
             verify: {
                 etherscan: {

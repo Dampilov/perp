@@ -6,8 +6,8 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts()
 
-    const Name = "QuoteToken"
-    const Symbol = "QTT"
+    const Name = "vUSD"
+    const Symbol = "vUSD"
 
     await deploy("QuoteToken", {
         from: deployer,

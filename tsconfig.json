@@ -4,6 +4,10 @@
         "esModuleInterop": true
     },
     "include": [
-        "./deploy"
+        "./hardhat.config.ts",
+        "test",
+        "./build/typechain",
+        "./typechain",
+        "./deploy",
     ]
 }

@@ -9,7 +9,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     const clearingHouseConfigAddress = (await deployments.get("ClearingHouseConfig")).address
     const vaultAddress = (await deployments.get("Vault")).address
     const quoteTokenAddress = (await deployments.get("QuoteToken")).address
-    const uniswapV3FactoryAddress = "0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30"
+    const uniswapV3FactoryAddress = (await deployments.get("UniswapV3Factory")).address
     const exchangeAddress = (await deployments.get("Exchange")).address
     const accountBalanceAddress = (await deployments.get("AccountBalance")).address
     const insuranceFundAddress = (await deployments.get("InsuranceFund")).address
@@ -45,4 +45,5 @@ module.exports.dependencies = [
     "Exchange",
     "AccountBalance",
     "InsuranceFund",
+    "UniswapV3Factory",
 ]

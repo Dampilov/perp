@@ -6,7 +6,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts()
 
-    const uniV3FactoryAddress = "0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30"
+    const uniV3FactoryAddress = (await deployments.get("UniswapV3Factory")).address
     const quoteTokenAddress = (await deployments.get("QuoteToken")).address
 
     await deploy("MarketRegistry", {
@@ -25,4 +25,4 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 }
 
 module.exports.tags = ["MarketRegistry"]
-module.exports.dependencies = ["QuoteToken"]
+module.exports.dependencies = ["QuoteToken", "UniswapV3Factory"]

@@ -6,7 +6,8 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts()
 
-    const baseTokenAddress = (await deployments.get("BaseToken")).address
+    //Rinkeby USDC
+    const settlementTokenAddress = "0xeb8f08a975Ab53E34D8a0330E0D34de942C95926"
 
     await deploy("InsuranceFund", {
         from: deployer,
@@ -15,7 +16,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [baseTokenAddress],
+                    args: [settlementTokenAddress],
                 },
             },
         },
@@ -24,4 +25,3 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 }
 
 module.exports.tags = ["InsuranceFund"]
-module.exports.dependencies = ["BaseToken"]
