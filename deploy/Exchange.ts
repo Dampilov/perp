@@ -10,7 +10,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     const orderBookAddress = (await deployments.get("OrderBook")).address
     const marketRegistryAddress = (await deployments.get("MarketRegistry")).address
 
-    await deploy("Exchange", {
+    const exchange = await deploy("Exchange", {
         from: deployer,
         proxy: {
             proxyContract: "OpenZeppelinTransparentProxy",
@@ -23,6 +23,10 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
         },
         log: true,
     })
+
+    const OrderBook = (await ethers.getContractFactory("OrderBook")).attach(orderBookAddress)
+    let tx = await (await OrderBook.setExchange(exchange.address)).wait()
+    console.log(`OrderBook.setExchange: ${tx.transactionHash}`)
 }
 
 module.exports.tags = ["Exchange"]

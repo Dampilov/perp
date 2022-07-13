@@ -10,6 +10,7 @@ import "hardhat-gas-reporter"
 import { HardhatUserConfig } from "hardhat/config"
 import "solidity-coverage"
 import "./mocha-test"
+import "./tasks"
 
 const config: HardhatUserConfig = {
     solidity: {
@@ -52,6 +53,8 @@ const config: HardhatUserConfig = {
                     apiKey: process.env.ETHERSCAN_API_KEY || "API_KEY_WEB",
                 },
             },
+            gas: 2100000,
+            gasPrice: 8000000000,
         },
         ropsten: {
             url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,

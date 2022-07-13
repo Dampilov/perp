@@ -11,7 +11,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     const accountBalanceAddress = (await deployments.get("AccountBalance")).address
     const insuranceFundAddress = (await deployments.get("InsuranceFund")).address
 
-    await deploy("Vault", {
+    const vault = await deploy("Vault", {
         from: deployer,
         proxy: {
             proxyContract: "OpenZeppelinTransparentProxy",
@@ -24,6 +24,14 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
         },
         log: true,
     })
+
+    const AccountBalance = (await ethers.getContractFactory("AccountBalance")).attach(accountBalanceAddress)
+    let tx = await (await AccountBalance.setVault(vault.address)).wait()
+    console.log(`AccountBalance.setVault: ${tx.transactionHash}`)
+
+    const InsuranceFund = (await ethers.getContractFactory("InsuranceFund")).attach(insuranceFundAddress)
+    tx = await (await InsuranceFund.setBorrower(vault.address)).wait()
+    console.log(`InsuranceFund.setBorrower: ${tx.transactionHash}`)
 }
 
 module.exports.tags = ["Vault"]

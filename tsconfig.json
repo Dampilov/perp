@@ -6,6 +6,7 @@
     "include": [
         "./hardhat.config.ts",
         "test",
+        "tasks",
         "./build/typechain",
         "./typechain",
         "./deploy",

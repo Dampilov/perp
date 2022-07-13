@@ -1,3 +1,4 @@
+import { parseUnits } from "ethers/lib/utils"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 
 module.exports = async function (hre: HardhatRuntimeEnvironment) {
@@ -6,17 +7,19 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts()
 
+    const usdcDecimals = 6
+
     const clearingHouseConfigAddress = (await deployments.get("ClearingHouseConfig")).address
     const vaultAddress = (await deployments.get("Vault")).address
-    const maxCollateralTokensPerAccountArg = 10
-    const debtNonSettlementTokenValueRatioArg = 10
-    const liquidationRatioArg = 10
-    const mmRatioBufferArg = 10
-    const clInsuranceFundFeeRatioArg = 10
-    const debtThresholdArg = 10
-    const collateralValueDustArg = 10
+    const maxCollateralTokensPerAccountArg = 3
+    const debtNonSettlementTokenValueRatioArg = 750000
+    const liquidationRatioArg = 500000
+    const mmRatioBufferArg = 5000
+    const clInsuranceFundFeeRatioArg = 12500
+    const debtThresholdArg = 10000
+    const collateralValueDustArg = 350
 
-    await deploy("CollateralManager", {
+    const collateralManager = await deploy("CollateralManager", {
         from: deployer,
         proxy: {
             proxyContract: "OpenZeppelinTransparentProxy",
@@ -31,14 +34,18 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
                         liquidationRatioArg,
                         mmRatioBufferArg,
                         clInsuranceFundFeeRatioArg,
-                        debtThresholdArg,
-                        collateralValueDustArg,
+                        parseUnits(debtThresholdArg.toString(), usdcDecimals),
+                        parseUnits(collateralValueDustArg.toString(), usdcDecimals),
                     ],
                 },
             },
         },
         log: true,
     })
+
+    const Vault = (await ethers.getContractFactory("Vault")).attach(vaultAddress)
+    let tx = await (await Vault.setCollateralManager(collateralManager.address)).wait()
+    console.log(`Vault.setCollateralManager: ${tx.transactionHash}`)
 }
 
 module.exports.tags = ["CollateralManager"]

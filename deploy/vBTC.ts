@@ -6,9 +6,9 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts()
 
-    const Name = "vETH"
-    const Symbol = "vETH"
-    const chainlinkPriceFeed = "0x8A753747A1Fa494EC906cE90E9f37563A8AF630e"
+    const Name = "vBTC"
+    const Symbol = "vBTC"
+    const chainlinkPriceFeed = "0xECe365B379E1dD183B20fc5f022230C044d51404"
 
     await deploy("BaseToken", {
         from: deployer,
@@ -25,4 +25,4 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     })
 }
 
-module.exports.tags = ["BaseToken"]
+module.exports.tags = ["vBTC"]
