@@ -5,7 +5,8 @@ task("baseToken.deploy")
     .addParam("name", "Contract address")
     .addParam("symbol", "BaseToken address")
     .addParam("pricefeed", "BaseToken address")
-    .setAction(async ({ name, symbol, pricefeed }, hre: HardhatRuntimeEnvironment) => {
+    .addParam("clearinghouse", "BaseToken address")
+    .setAction(async ({ name, symbol, pricefeed, clearinghouse }, hre: HardhatRuntimeEnvironment) => {
         const { deployments, getNamedAccounts, ethers } = hre
         const { deploy } = deployments
 
@@ -25,6 +26,9 @@ task("baseToken.deploy")
             },
             log: true,
         })
+
+        const BaseTokenContract = (await ethers.getContractFactory("BaseToken")).attach(newBaseToken.address)
+        await BaseTokenContract.mintMaximumTo(clearinghouse)
 
         console.log(`${name} address: ${newBaseToken.address}`)
     })

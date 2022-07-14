@@ -39,24 +39,23 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     })
 
     const AccountBalance = (await ethers.getContractFactory("AccountBalance")).attach(accountBalanceAddress)
-    let tx = await (await AccountBalance.setClearingHouse(clearingHouse.address)).wait()
-    console.log(`AccountBalance.setClearingHouse: ${tx.transactionHash}`)
-
     const Exchange = (await ethers.getContractFactory("Exchange")).attach(exchangeAddress)
-    tx = await (await Exchange.setClearingHouse(clearingHouse.address)).wait()
-    console.log(`Exchange.setClearingHouse: ${tx.transactionHash}`)
-
     const MarketRegistry = (await ethers.getContractFactory("MarketRegistry")).attach(marketRegistryAddress)
-    tx = await (await MarketRegistry.setClearingHouse(clearingHouse.address)).wait()
-    console.log(`MarketRegistry.setClearingHouse: ${tx.transactionHash}`)
-
     const OrderBook = (await ethers.getContractFactory("OrderBook")).attach(orderBookAddress)
-    tx = await (await OrderBook.setClearingHouse(clearingHouse.address)).wait()
-    console.log(`OrderBook.setClearingHouse: ${tx.transactionHash}`)
-
     const Vault = (await ethers.getContractFactory("Vault")).attach(vaultAddress)
-    tx = await (await Vault.setClearingHouse(clearingHouse.address)).wait()
-    console.log(`Vault.setClearingHouse: ${tx.transactionHash}`)
+    const QuoteToken = (await ethers.getContractFactory("QuoteToken")).attach(quoteTokenAddress)
+
+    await AccountBalance.setClearingHouse(clearingHouse.address)
+
+    await Exchange.setClearingHouse(clearingHouse.address)
+
+    await MarketRegistry.setClearingHouse(clearingHouse.address)
+
+    await OrderBook.setClearingHouse(clearingHouse.address)
+
+    await Vault.setClearingHouse(clearingHouse.address)
+
+    await QuoteToken.mintMaximumTo(clearingHouse.address)
 }
 
 module.exports.tags = ["ClearingHouse"]

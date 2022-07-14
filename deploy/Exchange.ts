@@ -17,7 +17,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [clearingHouseConfigAddress, orderBookAddress, marketRegistryAddress],
+                    args: [marketRegistryAddress, orderBookAddress, clearingHouseConfigAddress],
                 },
             },
         },
