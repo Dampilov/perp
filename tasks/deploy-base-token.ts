@@ -6,7 +6,8 @@ task("baseToken.deploy")
     .addParam("symbol", "BaseToken address")
     .addParam("pricefeed", "BaseToken address")
     .addParam("clearinghouse", "BaseToken address")
-    .setAction(async ({ name, symbol, pricefeed, clearinghouse }, hre: HardhatRuntimeEnvironment) => {
+    .addParam("exchange", "BaseToken address")
+    .setAction(async ({ name, symbol, pricefeed, clearinghouse, exchange }, hre: HardhatRuntimeEnvironment) => {
         const { deployments, getNamedAccounts, ethers } = hre
         const { deploy } = deployments
 
@@ -28,7 +29,10 @@ task("baseToken.deploy")
         })
 
         const BaseTokenContract = (await ethers.getContractFactory("BaseToken")).attach(newBaseToken.address)
+        const Exchange = (await ethers.getContractFactory("Exchange")).attach(exchange)
+
         await BaseTokenContract.mintMaximumTo(clearinghouse)
+        await Exchange.setMaxTickCrossedWithinBlock(newBaseToken.address, 250)
 
         console.log(`${name} address: ${newBaseToken.address}`)
     })

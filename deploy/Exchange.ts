@@ -25,8 +25,8 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     })
 
     const OrderBook = (await ethers.getContractFactory("OrderBook")).attach(orderBookAddress)
-    let tx = await (await OrderBook.setExchange(exchange.address)).wait()
-    console.log(`OrderBook.setExchange: ${tx.transactionHash}`)
+
+    await OrderBook.setExchange(exchange.address)
 }
 
 module.exports.tags = ["Exchange"]

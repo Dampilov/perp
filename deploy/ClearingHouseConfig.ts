@@ -6,7 +6,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 
     const { deployer } = await getNamedAccounts()
 
-    await deploy("ClearingHouseConfig", {
+    const clearinghouseconfig = await deploy("ClearingHouseConfig", {
         from: deployer,
         proxy: {
             proxyContract: "OpenZeppelinTransparentProxy",
@@ -19,6 +19,12 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
         },
         log: true,
     })
+
+    const ClearingHouseConfig = (await ethers.getContractFactory("ClearingHouseConfig")).attach(
+        clearinghouseconfig.address,
+    )
+
+    await ClearingHouseConfig.setSettlementTokenBalanceCap("1000000")
 }
 
 module.exports.tags = ["ClearingHouseConfig"]

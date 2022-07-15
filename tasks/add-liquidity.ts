@@ -24,7 +24,7 @@ task("clearingHouse.addLiquidity")
                 await ClearingHouseContract.addLiquidity({
                     baseToken: basetoken,
                     base: parseEther(base),
-                    quote: parseUnits(quote, "18"),
+                    quote: parseUnits(quote, "6"), // QuoteToken decimals = 6 (USDC)
                     lowerTick: lowertick,
                     upperTick: uppertick,
                     minBase: minbase,
