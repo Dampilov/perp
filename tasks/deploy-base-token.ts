@@ -13,9 +13,8 @@ task("baseToken.deploy")
 
         const { deployer } = await getNamedAccounts()
 
-        const newBaseToken = await deploy(`${name}`, {
+        const newBaseToken = await deploy("BaseToken", {
             from: deployer,
-            contract: "BaseToken",
             proxy: {
                 proxyContract: "OpenZeppelinTransparentProxy",
                 execute: {

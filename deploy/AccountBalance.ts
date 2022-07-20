@@ -25,8 +25,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     })
 
     const Exchange = (await ethers.getContractFactory("Exchange")).attach(exchangeAddress)
-    let tx = await (await Exchange.setAccountBalance(accountBalance.address)).wait()
-    console.log(`Exchange.setAccountBalance: ${tx.transactionHash}`)
+    await (await Exchange.setAccountBalance(accountBalance.address)).wait()
 }
 
 module.exports.tags = ["AccountBalance"]

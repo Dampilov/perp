@@ -1,4 +1,5 @@
 import "@nomiclabs/hardhat-ethers"
+import "@nomiclabs/hardhat-etherscan"
 import "@nomiclabs/hardhat-waffle"
 import "@openzeppelin/hardhat-upgrades"
 import "@typechain/hardhat"
@@ -76,6 +77,23 @@ const config: HardhatUserConfig = {
                     apiKey: process.env.ETHERSCAN_API_KEY || "API_KEY_WEB",
                 },
             },
+        },
+        bsc_testnet: {
+            url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+            chainId: 97,
+            //gasPrice: 20000000000,
+            accounts: { mnemonic: `${process.env.MNEMONIC}` },
+            verify: {
+                etherscan: {
+                    apiKey: process.env.BSCSCAN_API_KEY || "API_KEY_WEB",
+                },
+            },
+        },
+    },
+    etherscan: {
+        apiKey: {
+            rinkeby: process.env.ETHERSCAN_API_KEY || "API_KEY_WEB",
+            bsc_testnet: process.env.BSCSCAN_API_KEY || "API_KEY_WEB",
         },
     },
     dependencyCompiler: {

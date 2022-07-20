@@ -44,8 +44,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     })
 
     const Vault = (await ethers.getContractFactory("Vault")).attach(vaultAddress)
-    let tx = await (await Vault.setCollateralManager(collateralManager.address)).wait()
-    console.log(`Vault.setCollateralManager: ${tx.transactionHash}`)
+    await (await Vault.setCollateralManager(collateralManager.address)).wait()
 }
 
 module.exports.tags = ["CollateralManager"]

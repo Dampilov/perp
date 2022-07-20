@@ -1,3 +1,4 @@
+import { verify } from "crypto"
 import { subtask } from "hardhat/config"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { encodePriceSqrt } from "../test/shared/utilities"
@@ -14,12 +15,15 @@ subtask("uni.createAndInitPool")
 
         const uniV3FactoryContract = (await ethers.getContractFactory("UniswapV3Factory")).attach(contract)
 
-        /* await (
-            await uniV3FactoryContract.createPool(basetoken, quotetoken, unifeetier)
-        ).wait */
+        //await (await uniV3FactoryContract.createPool(basetoken, quotetoken, +unifeetier)).wait()
+
         const poolAddr = await uniV3FactoryContract.getPool(basetoken, quotetoken, unifeetier)
 
         const PoolContract = (await ethers.getContractFactory("UniswapV3Pool")).attach(poolAddr)
+
+        await hre.run("verify:verify", {
+            address: poolAddr,
+        })
 
         let tx = await (await PoolContract.initialize(encodePriceSqrt(initprice.toString(), "1"))).wait()
 

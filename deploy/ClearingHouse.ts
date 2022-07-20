@@ -45,17 +45,17 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     const Vault = (await ethers.getContractFactory("Vault")).attach(vaultAddress)
     const QuoteToken = (await ethers.getContractFactory("QuoteToken")).attach(quoteTokenAddress)
 
-    await AccountBalance.setClearingHouse(clearingHouse.address)
+    await (await AccountBalance.setClearingHouse(clearingHouse.address)).wait()
 
-    await Exchange.setClearingHouse(clearingHouse.address)
+    await (await Exchange.setClearingHouse(clearingHouse.address)).wait()
 
-    await MarketRegistry.setClearingHouse(clearingHouse.address)
+    await (await MarketRegistry.setClearingHouse(clearingHouse.address)).wait()
 
-    await OrderBook.setClearingHouse(clearingHouse.address)
+    await (await OrderBook.setClearingHouse(clearingHouse.address)).wait()
 
-    await Vault.setClearingHouse(clearingHouse.address)
+    await (await Vault.setClearingHouse(clearingHouse.address)).wait()
 
-    await QuoteToken.mintMaximumTo(clearingHouse.address)
+    await (await QuoteToken.mintMaximumTo(clearingHouse.address)).wait()
 }
 
 module.exports.tags = ["ClearingHouse"]
@@ -66,7 +66,7 @@ module.exports.dependencies = [
     "Exchange",
     "AccountBalance",
     "InsuranceFund",
-    "UniswapV3Factory",
     "MarketRegistry",
     "OrderBook",
+    "UniswapV3Factory",
 ]

@@ -26,12 +26,10 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     })
 
     const AccountBalance = (await ethers.getContractFactory("AccountBalance")).attach(accountBalanceAddress)
-    let tx = await (await AccountBalance.setVault(vault.address)).wait()
-    console.log(`AccountBalance.setVault: ${tx.transactionHash}`)
+    await (await AccountBalance.setVault(vault.address)).wait()
 
     const InsuranceFund = (await ethers.getContractFactory("InsuranceFund")).attach(insuranceFundAddress)
-    tx = await (await InsuranceFund.setBorrower(vault.address)).wait()
-    console.log(`InsuranceFund.setBorrower: ${tx.transactionHash}`)
+    await (await InsuranceFund.setBorrower(vault.address)).wait()
 }
 
 module.exports.tags = ["Vault"]

@@ -1,28 +1,23 @@
-import { parseUnits } from "ethers/lib/utils"
 import { task } from "hardhat/config"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 
-task("clearingHouse.openPosition")
+task("clearingHouse.closePosition")
     .addParam("contract", "Contract address")
     .addParam("basetoken", "Token address")
-    .addParam("amount", "Token address")
-    .setAction(async ({ contract, basetoken, amount }, hre: HardhatRuntimeEnvironment) => {
+    .setAction(async ({ contract, basetoken }, hre: HardhatRuntimeEnvironment) => {
         const { ethers } = hre
 
         const ClearingHouseContract = (await ethers.getContractFactory("ClearingHouse")).attach(contract)
 
         const tx = await (
-            await ClearingHouseContract.openPosition({
+            await ClearingHouseContract.closePosition({
                 baseToken: basetoken,
-                isBaseToQuote: false,
-                isExactInput: true,
-                oppositeAmountBound: 0,
-                amount: parseUnits(amount, "6"),
                 sqrtPriceLimitX96: 0,
+                oppositeAmountBound: 0,
                 deadline: ethers.constants.MaxUint256,
                 referralCode: ethers.constants.HashZero,
             })
         ).wait()
 
-        console.log(`CleaningHouse.openPosition: ${tx.transactionHash}`)
+        console.log(`CleaningHouse.closePosition: ${tx.transactionHash}`)
     })

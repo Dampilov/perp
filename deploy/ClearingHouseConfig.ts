@@ -24,7 +24,7 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
         clearinghouseconfig.address,
     )
 
-    await ClearingHouseConfig.setSettlementTokenBalanceCap("1000000")
+    await (await ClearingHouseConfig.setSettlementTokenBalanceCap("1000000")).wait()
 }
 
 module.exports.tags = ["ClearingHouseConfig"]
