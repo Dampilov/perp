@@ -3,15 +3,19 @@ import { HardhatRuntimeEnvironment } from "hardhat/types"
 
 task("market.addMarket")
     .addParam("contract", "Contract address")
-    .addParam("factory", "Contract address")
-    .addParam("exchange", "Pool address")
+    .addParam("clearinghouse", "Pool address")
     .addParam("basetoken", "Token address")
     .addOptionalParam("unifeetier", "Token address")
-    .setAction(async ({ contract, basetoken, exchange, factory, unifeetier }, hre: HardhatRuntimeEnvironment) => {
+    .setAction(async ({ contract, basetoken, unifeetier, clearinghouse }, hre: HardhatRuntimeEnvironment) => {
         const { ethers } = hre
         const uniFeeRatio = 10000
         // set maxTickCrossed as maximum tick range of pool by default, that means there is no over price when swap
         const maxTickCrossedWithinBlock = 887272 * 2
+
+        const ClearingHouseContract = (await ethers.getContractFactory("ClearingHouse")).attach(clearinghouse)
+
+        const exchange = await ClearingHouseContract.getExchange()
+        const factory = await ClearingHouseContract.getUniswapV3Factory()
 
         const MarketRegistryContract = (await ethers.getContractFactory("MarketRegistry")).attach(contract)
         const ExchangeContract = (await ethers.getContractFactory("Exchange")).attach(exchange)
@@ -27,21 +31,20 @@ task("market.addMarket")
             unifeetier: unifeetier || "10000",
         })
 
-        await BaseTokenContract.addWhitelist(poolAddr)
-        await QuoteTokenContract.addWhitelist(poolAddr)
+        await (await BaseTokenContract.addWhitelist(poolAddr)).wait()
+        await (await QuoteTokenContract.addWhitelist(poolAddr)).wait()
 
         const exFeeRatio = 1000 // 0.1%
         const ifFeeRatio = 100000 // 10%
-        const clearinghouse = await MarketRegistryContract.getClearingHouse()
 
-        await BaseTokenContract.addWhitelist(clearinghouse)
-        await QuoteTokenContract.addWhitelist(clearinghouse)
+        await (await BaseTokenContract.addWhitelist(clearinghouse)).wait()
+        await (await QuoteTokenContract.addWhitelist(clearinghouse)).wait()
 
         const tx = await (await MarketRegistryContract.addPool(basetoken, uniFeeRatio)).wait()
-        await MarketRegistryContract.setFeeRatio(basetoken, exFeeRatio)
-        await MarketRegistryContract.setInsuranceFundFeeRatio(basetoken, ifFeeRatio)
+        await (await MarketRegistryContract.setFeeRatio(basetoken, exFeeRatio)).wait()
+        await (await MarketRegistryContract.setInsuranceFundFeeRatio(basetoken, ifFeeRatio)).wait()
 
-        await ExchangeContract.setMaxTickCrossedWithinBlock(basetoken, maxTickCrossedWithinBlock)
+        await (await ExchangeContract.setMaxTickCrossedWithinBlock(basetoken, maxTickCrossedWithinBlock)).wait()
 
         console.log(`MarketRegistry.addPool: ${tx.transactionHash}`)
     })

@@ -1,7 +1,8 @@
-import { task } from "hardhat/config"
+import { Address, BN } from "ethereumjs-util"
+import { subtask } from "hardhat/config"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 
-task("priceFeed.deploy")
+subtask("priceFeed.deploy")
     .addParam("pair", "Contract address")
     .addParam("aggregator", "Contract address")
     .setAction(async ({ pair, aggregator }, hre: HardhatRuntimeEnvironment) => {
@@ -18,4 +19,6 @@ task("priceFeed.deploy")
         })
 
         console.log(`${pair} PriceFeed address: ${newChainlinkPriceFeed.address}`)
+
+        return newChainlinkPriceFeed.address
     })

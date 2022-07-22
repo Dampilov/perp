@@ -107,6 +107,7 @@
   },
   "dependencies": {
     "@perp/curie-deployments": "^2022.7.11-1657527059898",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "ethereumjs-util": "^7.1.5"
   }
 }

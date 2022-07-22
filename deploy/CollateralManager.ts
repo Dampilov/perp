@@ -1,4 +1,4 @@
-import { parseUnits } from "ethers/lib/utils"
+import { parseEther, parseUnits } from "ethers/lib/utils"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 
 module.exports = async function (hre: HardhatRuntimeEnvironment) {
@@ -45,7 +45,24 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 
     const Vault = (await ethers.getContractFactory("Vault")).attach(vaultAddress)
     await (await Vault.setCollateralManager(collateralManager.address)).wait()
+
+    // add collateral
+    const CollateralManager = (await ethers.getContractFactory("CollateralManager")).attach(collateralManager.address)
+
+    const CollateralTokenAddress = (await deployments.get("WETH")).address
+    const CollaterPriceFeedAddress = (await deployments.get("ETHUSDChainlinkPriceFeed")).address
+
+    const depositCap = 1000
+
+    await (
+        await CollateralManager.addCollateral(CollateralTokenAddress, {
+            priceFeed: CollaterPriceFeedAddress,
+            collateralRatio: (0.7e6).toString(),
+            discountRatio: (0.1e6).toString(),
+            depositCap: parseEther(depositCap.toString()),
+        })
+    ).wait()
 }
 
 module.exports.tags = ["CollateralManager"]
-module.exports.dependencies = ["ClearingHouseConfig", "Vault"]
+module.exports.dependencies = ["ClearingHouseConfig", "Vault", "WETH", "ETHUSDChainlinkPriceFeed"]

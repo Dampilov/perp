@@ -11,9 +11,9 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
     if ((await hre.getChainId()) == "4") {
         //Rinkeby USDC
         settlementTokenAddress = "0xeb8f08a975Ab53E34D8a0330E0D34de942C95926"
-    } else if ((await hre.getChainId()) == "97") {
-        //Binance USDC
-        settlementTokenAddress = "0x90c069C4538adAc136E051052E14c1cD799C41B7"
+    } else {
+        //Own USDC
+        settlementTokenAddress = (await deployments.get("USDC")).address
     }
 
     await deploy("InsuranceFund", {
@@ -32,3 +32,4 @@ module.exports = async function (hre: HardhatRuntimeEnvironment) {
 }
 
 module.exports.tags = ["InsuranceFund"]
+module.exports.dependencies = ["SettlementToken"]

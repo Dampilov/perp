@@ -68,6 +68,8 @@ const config: HardhatUserConfig = {
                     apiKey: process.env.ETHERSCAN_API_KEY || "API_KEY_WEB",
                 },
             },
+            gas: 2100000,
+            gasPrice: 8000000000,
         },
         kovan: {
             url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
@@ -78,10 +80,11 @@ const config: HardhatUserConfig = {
                 },
             },
         },
-        bsc_testnet: {
+        bscTestnet: {
             url: "https://data-seed-prebsc-1-s1.binance.org:8545",
             chainId: 97,
-            //gasPrice: 20000000000,
+            gas: 2100000,
+            gasPrice: 20000000000,
             accounts: { mnemonic: `${process.env.MNEMONIC}` },
             verify: {
                 etherscan: {
@@ -93,7 +96,7 @@ const config: HardhatUserConfig = {
     etherscan: {
         apiKey: {
             rinkeby: process.env.ETHERSCAN_API_KEY || "API_KEY_WEB",
-            bsc_testnet: process.env.BSCSCAN_API_KEY || "API_KEY_WEB",
+            bscTestnet: process.env.BSCSCAN_API_KEY || "API_KEY_WEB",
         },
     },
     dependencyCompiler: {
@@ -105,6 +108,7 @@ const config: HardhatUserConfig = {
             "@perp/perp-oracle-contract/contracts/ChainlinkPriceFeed.sol",
             "@perp/perp-oracle-contract/contracts/BandPriceFeed.sol",
             "@perp/perp-oracle-contract/contracts/EmergencyPriceFeed.sol",
+            "@openzeppelin/contracts/token",
         ],
     },
     contractSizer: {
