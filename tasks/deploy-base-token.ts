@@ -1,4 +1,4 @@
-import { Address, BN } from "ethereumjs-util"
+import { Address } from "ethereumjs-util"
 import { task } from "hardhat/config"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 
@@ -9,7 +9,7 @@ task("baseToken.deploy")
     .addParam("pair", "Pair name")
     .addParam("aggregator", "Aggregator address")
     .setAction(async ({ name, symbol, clearinghouse, pair, aggregator }, hre: HardhatRuntimeEnvironment) => {
-        const { deployments, getNamedAccounts, ethers } = hre
+        const { deployments, getNamedAccounts, ethers, network } = hre
         const { deploy } = deployments
 
         const { deployer } = await getNamedAccounts()
@@ -22,14 +22,16 @@ task("baseToken.deploy")
         const ClearingHouse = (await ethers.getContractFactory("ClearingHouse")).attach(clearinghouse)
         const quoteAddress = Address.fromString(await ClearingHouse.getQuoteToken())
 
-        let futureAddress = quoteAddress
+        /* let futureAddress = quoteAddress
         let nonce = await ethers.provider.getTransactionCount(deployer)
+        console.log(`Actual nonce: ${nonce}`)
 
         for (; futureAddress >= quoteAddress; nonce++) {
             futureAddress = Address.generate(Address.fromString(deployer), new BN(nonce))
         }
 
         console.log(`Predicted ${name} address: ` + futureAddress.toString())
+        console.log(`Future nonce: ${nonce}`) */
 
         const newBaseToken = await deploy(`${name}`, {
             from: deployer,
@@ -43,7 +45,6 @@ task("baseToken.deploy")
                     },
                 },
             },
-            nonce: nonce,
             log: true,
         })
 
@@ -51,9 +52,5 @@ task("baseToken.deploy")
 
         const BaseTokenContract = (await ethers.getContractFactory("BaseToken")).attach(newBaseToken.address)
 
-        const exchange = await ClearingHouse.getExchange()
-        const Exchange = (await ethers.getContractFactory("Exchange")).attach(exchange)
-
         await (await BaseTokenContract.mintMaximumTo(clearinghouse)).wait()
-        await (await Exchange.setMaxTickCrossedWithinBlock(newBaseToken.address, 250)).wait()
     })

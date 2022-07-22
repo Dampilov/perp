@@ -9,20 +9,20 @@ task("market.addMarket")
     .setAction(async ({ contract, basetoken, unifeetier, clearinghouse }, hre: HardhatRuntimeEnvironment) => {
         const { ethers } = hre
         const uniFeeRatio = 10000
-        // set maxTickCrossed as maximum tick range of pool by default, that means there is no over price when swap
-        const maxTickCrossedWithinBlock = 887272 * 2
+        // as perp
+        const maxTickCrossedWithinBlock = 250
 
         const ClearingHouseContract = (await ethers.getContractFactory("ClearingHouse")).attach(clearinghouse)
 
         const exchange = await ClearingHouseContract.getExchange()
         const factory = await ClearingHouseContract.getUniswapV3Factory()
 
-        const MarketRegistryContract = (await ethers.getContractFactory("MarketRegistry")).attach(contract)
-        const ExchangeContract = (await ethers.getContractFactory("Exchange")).attach(exchange)
-        const BaseTokenContract = (await ethers.getContractFactory("BaseToken")).attach(basetoken)
+        const MarketRegistryContract = await (await ethers.getContractFactory("MarketRegistry")).attach(contract)
+        const ExchangeContract = await (await ethers.getContractFactory("Exchange")).attach(exchange)
+        const BaseTokenContract = await (await ethers.getContractFactory("BaseToken")).attach(basetoken)
 
         const quotetoken = await MarketRegistryContract.getQuoteToken()
-        const QuoteTokenContract = (await ethers.getContractFactory("QuoteToken")).attach(quotetoken)
+        const QuoteTokenContract = await (await ethers.getContractFactory("QuoteToken")).attach(quotetoken)
 
         const poolAddr = await hre.run("uni.createAndInitPool", {
             contract: factory,

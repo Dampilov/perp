@@ -14,15 +14,15 @@ subtask("uni.createAndInitPool")
 
         const uniV3FactoryContract = (await ethers.getContractFactory("UniswapV3Factory")).attach(contract)
 
-        await (await uniV3FactoryContract.createPool(quotetoken, basetoken, unifeetier)).wait()
+        //await (await uniV3FactoryContract.createPool(basetoken, quotetoken, unifeetier)).wait()
 
         const poolAddr = await uniV3FactoryContract.getPool(basetoken, quotetoken, unifeetier)
-
-        const PoolContract = (await ethers.getContractFactory("UniswapV3Pool")).attach(poolAddr)
 
         await hre.run("verify:verify", {
             address: poolAddr,
         })
+
+        const PoolContract = (await ethers.getContractFactory("UniswapV3Pool")).attach(poolAddr)
 
         let tx = await (await PoolContract.initialize(encodePriceSqrt(initprice.toString(), "1"))).wait()
 
