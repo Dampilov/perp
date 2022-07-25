@@ -8,6 +8,7 @@
         "test",
         "tasks",
         "./build/typechain",
+        "./test.config.d.ts",
         "./typechain",
         "./deploy",
     ]
